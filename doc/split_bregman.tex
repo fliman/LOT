@@ -1,0 +1,80 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+\usepackage{amsmath}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Linearized Split Bregman}
+\author{Wang Yu}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+\section{proximity operator}\label{sec:prox}
+Firstly, Consider the following problem
+
+\begin{equation}
+prox_{x}=\arg\min_{z}\|x-z\|^2_2 + \lambda \|z\|_1
+\end{equation}
+since all the functions in the problem are convex, the optimality condition is
+\[
+0\in\nabla(\|x-z\|^2_2)+\lambda \partial\|z\|_1
+\]
+Notice that the above equation is just summation of each component, it is equivalent to considering an arbitrary i-th component.  if $\|z_i\| \neq 0$, the subgradient of $|z_i|$ is just  the gradient, which is $sgn(z_i) $, where $z_i$ is one component of $z$, thus the above relation becomes the equality
+
+\begin{align}
+0=&2(z_i - x_i) + \lambda sgn(z_i) \\
+z_i = &x_i - \frac{1}{2}\lambda sgn(z_i)
+\end{align}
+from above equation it is clear that if $z_i > 0$, $x_i$ must be greater then 0, and if $z_i <0$, $x_i < 0$ also holds. Hence $sgn(z_i) = sgn(x_i)$, in turn the following is true
+ 
+ \begin{equation}
+z_i=x_i - \frac{1}{2}\lambda sgn(x_i)
+\end{equation} 
+
+For $z_i$ equals 0 the subgraidient of  $|z_i|$is the interval $[-1, 1]$, 
+\[
+0\in2 ( z_i- x_i)+ \lambda [-1, 1] => x_i \in [-\frac{\lambda}{2}, \frac{\lambda}{2}]
+\]
+Combine two cases, for each $z_i$ the minimizer satisfy the following relation
+\begin{equation}
+z_i=\left\{
+\begin{array}{lr}
+0   & |x_i| \leq \frac{\lambda}{2} \\
+x_i - \frac{1}{2}\lambda sgn(x_i) & |x_i| > \frac{\lambda}{2}
+\end{array}
+\right.
+\end{equation}
+%\subsection{}
+\section{General linear $L_1$ minimization}
+In many applications, the problem can be formulized as
+\begin{equation}
+\arg\min_{z}\|Az-x\|^2_2 + \lambda \|z\|_1
+\end{equation}
+where $A$ is a linear operator. Approximate the above equation by Taylor expansion at $z^k$, the linearized verion of the problme becomes an iterative shceme
+\begin{equation}
+z^{k+1}=\arg\min_{z} \lambda \|z\|_1 + \|Az^k-x\|^2_2 + (A^tAz^k-A^tx, z-z^k) + \frac{1}{2\delta}\|z-z^k\|^2
+\end{equation}
+The last penalty term is to make sure $z_{k+1}$ and $z_{k}$ not too far from each other so that Taylor expansion is still valid.
+Throw away some constants, the scheme can be simplified as 
+\begin{equation}
+z^{k+1}=\arg\min_{z} \lambda \|z\|_1 + \frac{1}{2\delta}\|z-(z^k-\delta(A^tAz^k-A^tx))\|^2
+\end{equation}
+Note that the right hand side is of the form derived in Section \ref{sec:prox}, hence $z^{k+1}$ can be solved as
+\begin{equation}
+z_i=\left\{
+\begin{array}{lr}
+0   & |y_i| \leq \lambda\delta\\
+y_i - \frac{1}{2}\lambda sgn(y_i) & |y_i| > \lambda\delta
+\end{array}
+\right.
+\end{equation}
+where $y_i = z^k_i-\delta(A^tAz^k_i-A^tx_i)$
+\section{Linearized split Bregman and Augmented Lagrange method}
+\section{Appendix}
+subderivative
+\end{document}  
